@@ -18,27 +18,29 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
+            .cors(cors -> cors.configure(http))  // ✅ Enable CORS support here
+            
             .csrf().disable()
             .authorizeHttpRequests(auth -> auth
-            		.requestMatchers(
-            			    "/api/auth/register",
-            			    "/api/auth/login",
-            			    "/analyze",
-            			    "/api/admin/users",
-            			    "/api/admin/users/{id}",
-            			    "/api/admin/delete/users/{id}",
-            			    "/api/admin/users/search",
-            			    "/api/admin/jobs",
-            			    "/api/admin/broadcast",
-            			    "/api/admin/analytics"
-            			).permitAll()
-
+                .requestMatchers(
+                    "/api/auth/register",
+                    "/api/auth/login",
+                    "/analyze",
+                    "/api/admin/users",
+                    "/api/admin/users/{id}",
+                    "/api/admin/delete/users/{id}",
+                    "/api/admin/users/search",
+                    "/api/admin/jobs",
+                    "/api/admin/broadcast",
+                    "/api/admin/analytics"
+                ).permitAll()
                 .anyRequest().authenticated()
             )
             .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }
+
 
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
