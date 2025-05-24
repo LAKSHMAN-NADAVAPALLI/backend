@@ -7,6 +7,10 @@ RUN mvn clean package -DskipTests
 # Stage 2: Run the Spring Boot app
 FROM openjdk:17-jdk-slim
 WORKDIR /app
+
+ENV MONGO_URI=""
+ENV JWT_SECRET=""
+
 COPY --from=build /app/target/*.jar app.jar
 EXPOSE 8080
 ENTRYPOINT ["java", "-jar", "app.jar"]
