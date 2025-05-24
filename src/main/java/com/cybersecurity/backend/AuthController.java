@@ -7,7 +7,15 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Optional;
-@CrossOrigin(origins = {"http://localhost:3000","nadavapalli-lakshman-ai-cyber-threat-detection.vercel.app"}) // Adjust for deployment
+@CrossOrigin(
+		  origins = {
+		    "http://localhost:3000",
+		    "https://nadavapalli-lakshman-ai-cyber-threat-detection.vercel.app"
+		  },
+		  allowedHeaders = "*",
+		  exposedHeaders = "Authorization"
+		)
+
 @RestController
 @RequestMapping("/api/auth")
 public class AuthController {
