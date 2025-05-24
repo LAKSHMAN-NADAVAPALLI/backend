@@ -8,8 +8,9 @@ RUN mvn clean package -DskipTests
 FROM openjdk:17-jdk-slim
 WORKDIR /app
 
-ENV MONGO_URI=""
-ENV JWT_SECRET=""
+ENV MONGO_URI="mongodb+srv://LAKSHMAN:lakshman@cluster0.4unosvn.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0"
+ENV JWT_SECRET="supersecretkeysupersecretkeysupersecretkey!"
+
 
 COPY --from=build /app/target/*.jar app.jar
 EXPOSE 8080
