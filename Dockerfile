@@ -11,7 +11,7 @@ COPY --from=build /app/target/*.jar app.jar
 
 ENV SPRING_DATA_MONGODB_URI=${MONGO_URI}
 ENV JWT_SECRET=${JWT_SECRET}
+ENV SERVER_PORT=${PORT:8080}
 
-
-EXPOSE 8080
+EXPOSE ${PORT:-8080}
 ENTRYPOINT ["java", "-jar", "app.jar"]
