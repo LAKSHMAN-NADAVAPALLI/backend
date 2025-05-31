@@ -7,11 +7,11 @@ RUN mvn clean package -DskipTests
 # Stage 2: Run the Spring Boot app
 FROM openjdk:17-jdk-slim
 WORKDIR /app
-
-ENV MONGO_URI="mongodb+srv://LAKSHMAN:lakshman@cluster0.4unosvn.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0"
-ENV JWT_SECRET="supersecretkeysupersecretkeysupersecretkey!"
-
-
 COPY --from=build /app/target/*.jar app.jar
+
+ENV SPRING_DATA_MONGODB_URI=${MONGO_URI}
+ENV JWT_SECRET=${JWT_SECRET}
+
+
 EXPOSE 8080
 ENTRYPOINT ["java", "-jar", "app.jar"]
