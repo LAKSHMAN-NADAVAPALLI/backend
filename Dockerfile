@@ -1,14 +1,18 @@
-# Stage 1: Build the Spring Boot app
+# -------- Stage 1: Build the Spring Boot app --------
 FROM maven:3.8.5-openjdk-17-slim AS build
 WORKDIR /app
 COPY . .
 RUN mvn clean package -DskipTests
 
-# Stage 2: Run the Spring Boot app
+# -------- Stage 2: Run the built app --------
 FROM openjdk:17-jdk-slim
 WORKDIR /app
+
+# Copy the packaged JAR from the build stage
 COPY --from=build /app/target/*.jar app.jar
 
+# Expose the application port
 EXPOSE 8080
 
+# Start the app using the environment-provided variables (Render handles this automatically)
 ENTRYPOINT ["java", "-jar", "app.jar"]
