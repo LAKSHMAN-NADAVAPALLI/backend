@@ -14,5 +14,5 @@ COPY --from=build /app/target/*.jar app.jar
 # Expose the application port
 EXPOSE 8080
 
-# Start the app using the environment-provided variables (Render handles this automatically)
-ENTRYPOINT ["java", "-jar", "app.jar"]
+# Explicitly pass environment variables to the JVM (critical!)
+ENTRYPOINT ["sh", "-c", "java -Dspring.data.mongodb.uri=$MONGO_URI -Djwt.secret=$JWT_SECRET -jar app.jar"]
