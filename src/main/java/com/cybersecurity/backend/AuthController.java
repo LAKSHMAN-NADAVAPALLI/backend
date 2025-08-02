@@ -1,4 +1,6 @@
 package com.cybersecurity.backend;
+import java.util.Map;
+import java.util.HashMap;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -52,15 +54,15 @@ public class AuthController {
 
 
     @PostMapping("/login")
-    public ResponseEntity<String> loginUser(@RequestBody User loginUser) {
+    public ResponseEntity<?> loginUser(@RequestBody User loginUser) {
         String email = loginUser.getEmail() != null ? loginUser.getEmail().toLowerCase() : "";
 
         if (email.isEmpty()) {
-            return ResponseEntity.badRequest().body("Email is required");
+            return ResponseEntity.badRequest().body(Map.of("message", "Email is required"));
         }
 
         if (loginUser.getPassword() == null || loginUser.getPassword().isEmpty()) {
-            return ResponseEntity.badRequest().body("Password is required");
+            return ResponseEntity.badRequest().body(Map.of("message", "Password is required"));
         }
 
         Optional<User> user = userRepository.findByEmail(email);
@@ -68,17 +70,21 @@ public class AuthController {
             boolean passwordMatches = passwordEncoder.matches(loginUser.getPassword(), user.get().getPassword());
 
             if (passwordMatches) {
-                // Generate JWT token with both email and role
-                String token = jwtUtil.generateToken(email, user.get().getRole());  // Pass both email and role
+                String token = jwtUtil.generateToken(email, user.get().getRole());
 
                 return ResponseEntity.ok()
-                        .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
-                        .body("Login successful!");
+                    .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
+                    .body(Map.of(
+                        "message", "Login successful!",
+                        "token", token,
+                        "role", user.get().getRole()
+                    ));
             }
         }
 
-        return ResponseEntity.status(401).body("Invalid email or password");
+        return ResponseEntity.status(401).body(Map.of("message", "Invalid email or password"));
     }
+
 
 
 
